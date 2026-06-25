@@ -28,8 +28,10 @@ const MY_LNG = 78.9629;
 
 export default function CyberGlobe({ activeSessions = [] }: { activeSessions?: any[] }) {
   const globeEl = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [arcsData, setArcsData] = useState([]);
   const [countries, setCountries] = useState({ features: [] });
+  const [dimensions, setDimensions] = useState({ width: 500, height: 500 });
 
   useEffect(() => {
     // 1. Fetch GeoJSON for country borders
@@ -69,30 +71,45 @@ export default function CyberGlobe({ activeSessions = [] }: { activeSessions?: a
     }
   }, [activeSessions]);
 
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      const { width, height } = entries[0].contentRect;
+      if (width > 0 && height > 0) {
+        setDimensions({ width, height });
+      }
+    });
+    
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="flex items-center justify-center w-full h-full cursor-move">
-        <Globe
-            ref={globeEl}
-            globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
-            backgroundColor="rgba(0,0,0,0)"
-            
-            // Country Borders
-            hexPolygonsData={countries.features}
-            hexPolygonResolution={3}
-            hexPolygonMargin={0.7}
-            hexPolygonColor={() => '#0f172a'}
-            
-            // Connection Arcs
-            arcsData={arcsData}
-            arcColor="color"
-            arcDashLength={0.4}
-            arcDashGap={0.1}
-            arcDashAnimateTime={2000}
-            arcStroke={0.5}
-            
-            width={500}
-            height={500}
-        />
+    <div ref={containerRef} className="flex items-center justify-center w-full h-full cursor-move min-h-[350px]">
+        {dimensions.width > 0 && (
+            <Globe
+                ref={globeEl}
+                globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
+                backgroundColor="rgba(0,0,0,0)"
+                
+                // Country Borders
+                hexPolygonsData={countries.features}
+                hexPolygonResolution={3}
+                hexPolygonMargin={0.7}
+                hexPolygonColor={() => '#0f172a'}
+                
+                // Connection Arcs
+                arcsData={arcsData}
+                arcColor="color"
+                arcDashLength={0.4}
+                arcDashGap={0.1}
+                arcDashAnimateTime={2000}
+                arcStroke={0.5}
+                
+                width={dimensions.width}
+                height={dimensions.height}
+            />
+        )}
     </div>
   );
 }

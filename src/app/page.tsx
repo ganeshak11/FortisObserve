@@ -28,29 +28,29 @@ export default async function CommandCenter() {
   return (
     <div className="p-6 space-y-6 h-full flex flex-col">
       {/* Header bar */}
-      <header className="flex items-center justify-between">
+      <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-wider text-slate-100 flex items-center gap-3">
           COMMAND CENTER
           <span className="text-xs font-mono bg-cyan-900/50 text-cyan-400 px-2 py-1 rounded border border-cyan-800">
             LIVE
           </span>
         </h1>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-2 md:gap-4">
             <div className="glass-panel px-4 py-2 flex items-center gap-2">
                 <ShieldAlert className="w-4 h-4 text-emerald-400" />
                 <span className="text-sm font-medium">Status: OPTIMAL</span>
             </div>
-            <div className="glass-panel px-4 py-2 flex items-center gap-2 text-slate-300">
+            <div className="glass-panel px-4 py-2 flex items-center gap-2 text-slate-300 hidden sm:flex">
                 <span className="text-sm font-mono">GLOBAL OPERATIONS</span>
             </div>
         </div>
       </header>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-12 gap-6 flex-1 min-h-0">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 flex-1 min-h-0 pb-10">
         
         {/* Left Column: Quick Stats & Heatmap */}
-        <div className="col-span-3 space-y-6 flex flex-col">
+        <div className="xl:col-span-3 space-y-6 flex flex-col">
           <div className="glass-panel p-5 space-y-4">
             <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase flex items-center gap-2">
               <Wifi className="w-4 h-4" /> Live Network
@@ -67,7 +67,7 @@ export default async function CommandCenter() {
 
           <div className="glass-panel p-5 flex-1">
             <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-4">System Identity</h2>
-            <div className="flex flex-col items-center justify-center h-full text-slate-400 text-sm font-mono space-y-2">
+            <div className="flex flex-col items-center justify-center h-full text-slate-400 text-sm font-mono space-y-2 py-4">
                 <div>NODE: ALPHA-SEC-1</div>
                 <div>FRAMEWORK: NEXTJS 15</div>
                 <div>REGION: AP-SOUTH-1</div>
@@ -77,9 +77,9 @@ export default async function CommandCenter() {
         </div>
 
         {/* Center Column: 3D Globe */}
-        <div className="col-span-6 glass-panel flex items-center justify-center relative overflow-hidden">
+        <div className="xl:col-span-6 glass-panel flex items-center justify-center relative overflow-hidden min-h-[400px] xl:min-h-0">
             <div className="absolute top-4 left-4 z-10">
-                <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase flex items-center gap-2">
+                <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase flex items-center gap-2 bg-slate-950/80 p-2 rounded backdrop-blur-md">
                 <Globe2 className="w-4 h-4" /> Global Threat Radar
                 </h2>
             </div>
@@ -89,7 +89,7 @@ export default async function CommandCenter() {
         </div>
 
         {/* Right Column: Alerts & Live Feed */}
-        <div className="col-span-3 space-y-6 flex flex-col">
+        <div className="xl:col-span-3 space-y-6 flex flex-col">
           <div className="glass-panel p-5">
             <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-4">Top Sources</h2>
             <ul className="space-y-3 font-mono text-sm">

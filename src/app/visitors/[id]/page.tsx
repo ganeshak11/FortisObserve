@@ -25,7 +25,7 @@ export default async function VisitorTimeline({ params }: { params: { id: string
 
     return (
         <div className="p-6 space-y-6 h-full flex flex-col max-w-7xl mx-auto w-full">
-            <header className="flex items-center justify-between">
+            <header className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
                 <div>
                     <Link href="/visitors" className="text-cyan-500 hover:text-cyan-400 flex items-center gap-2 text-sm font-mono mb-4 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
@@ -37,21 +37,21 @@ export default async function VisitorTimeline({ params }: { params: { id: string
                     </h1>
                     <p className="text-slate-400 mt-2 font-mono text-sm">UUID: {session.visitor_uuid}</p>
                 </div>
-                <div className="text-right font-mono text-xs text-slate-500">
+                <div className="text-left xl:text-right font-mono text-xs text-slate-500">
                     <div>FIRST SEEN: {new Date(session.first_seen).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'medium' })}</div>
                     <div>LAST SEEN: {new Date(session.last_seen).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'medium' })}</div>
                 </div>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
                 {/* Session Details Card */}
-                <div className="md:col-span-1 space-y-6">
+                <div className="xl:col-span-1 space-y-6">
                     <div className="glass-panel p-6 space-y-6">
                         <div className="space-y-1">
                             <h3 className="text-xs font-bold text-slate-500 tracking-widest uppercase mb-3 flex items-center gap-2">
                                 <Network className="w-4 h-4 text-cyan-500" /> Network
                             </h3>
-                            <div className="text-sm font-mono text-slate-200">{session.ip_address}</div>
+                            <div className="text-sm font-mono text-slate-200 break-all">{session.ip_address}</div>
                             <div className="text-xs text-slate-400 truncate" title={session.isp}>{session.isp}</div>
                         </div>
                         
@@ -68,7 +68,7 @@ export default async function VisitorTimeline({ params }: { params: { id: string
                                 <Laptop className="w-4 h-4 text-purple-500" /> Fingerprint
                             </h3>
                             <div className="text-sm text-slate-200">{session.device} / {session.os}</div>
-                            <div className="text-xs text-slate-400">{session.browser}</div>
+                            <div className="text-xs text-slate-400 break-all">{session.browser}</div>
                         </div>
 
                         <div className="pt-4 border-t border-slate-800">
@@ -79,12 +79,12 @@ export default async function VisitorTimeline({ params }: { params: { id: string
                 </div>
 
                 {/* Event Timeline */}
-                <div className="md:col-span-3 glass-panel p-6 flex flex-col">
+                <div className="xl:col-span-3 glass-panel p-6 flex flex-col overflow-hidden">
                     <h3 className="text-sm font-bold text-slate-300 tracking-widest uppercase mb-6 flex items-center gap-2">
                         <Activity className="w-4 h-4 text-cyan-500" /> Activity Log
                     </h3>
                     
-                    <div className="flex-1 overflow-auto pr-4 space-y-6">
+                    <div className="flex-1 overflow-auto pr-2 space-y-6">
                         {events && events.length > 0 ? events.map((ev: any, i: number) => (
                             <div key={ev.id} className="relative flex gap-4">
                                 {i !== events.length - 1 && (
@@ -97,8 +97,8 @@ export default async function VisitorTimeline({ params }: { params: { id: string
                                         <FileText className="w-4 h-4 text-cyan-500" />
                                     )}
                                 </div>
-                                <div className="flex-1 bg-slate-900/40 rounded-lg border border-slate-800 p-4">
-                                    <div className="flex items-start justify-between gap-4 mb-2">
+                                <div className="flex-1 bg-slate-900/40 rounded-lg border border-slate-800 p-4 overflow-hidden">
+                                    <div className="flex flex-col sm:flex-row items-start justify-between gap-2 sm:gap-4 mb-2">
                                         <div className="font-mono text-sm text-emerald-400 break-all">
                                             GET {ev.path}
                                         </div>
@@ -109,7 +109,7 @@ export default async function VisitorTimeline({ params }: { params: { id: string
                                     </div>
                                     <div className="flex flex-wrap gap-4 text-xs font-mono text-slate-400 mt-3">
                                         {ev.referer && ev.referer !== 'null' && (
-                                            <div><span className="text-slate-600">REF:</span> {ev.referer}</div>
+                                            <div className="truncate w-full"><span className="text-slate-600">REF:</span> {ev.referer}</div>
                                         )}
                                         {ev.latency_ms && (
                                             <div><span className="text-slate-600">LATENCY:</span> {ev.latency_ms}ms</div>
