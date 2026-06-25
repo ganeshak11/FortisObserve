@@ -37,11 +37,11 @@ export async function POST(req: Request) {
             expectedChallenge,
             expectedOrigin,
             expectedRPID: rpID,
-            authenticator: {
-                credentialID: Buffer.from(device.credential_id, 'base64url'),
-                credentialPublicKey: Buffer.from(device.public_key, 'base64url'),
+            credential: {
+                id: device.credential_id,
+                publicKey: new Uint8Array(Buffer.from(device.public_key, 'base64url')),
                 counter: device.counter,
-                transports: device.transports
+                transports: device.transports as any
             }
         });
 
