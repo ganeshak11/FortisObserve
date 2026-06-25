@@ -26,16 +26,16 @@ export async function POST(req: Request) {
         });
 
         if (verification.verified && verification.registrationInfo) {
-            const { credentialID, credentialPublicKey, counter } = verification.registrationInfo;
+            const { credential } = verification.registrationInfo;
 
             // Convert to base64url for easy database storage
-            const credentialIDBase64 = Buffer.from(credentialID).toString('base64url');
-            const publicKeyBase64 = Buffer.from(credentialPublicKey).toString('base64url');
+            const credentialIDBase64 = credential.id;
+            const publicKeyBase64 = Buffer.from(credential.publicKey).toString('base64url');
 
             const { error } = await supabaseAdmin.from('admin_devices').insert({
                 credential_id: credentialIDBase64,
                 public_key: publicKeyBase64,
-                counter: counter,
+                counter: credential.counter,
                 transports: body.response.transports || []
             });
 

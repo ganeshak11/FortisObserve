@@ -27,7 +27,7 @@ const MY_LAT = 20.5937;
 const MY_LNG = 78.9629;
 
 export default function CyberGlobe({ activeSessions = [] }: { activeSessions?: any[] }) {
-  const globeEl = useRef<any>();
+  const globeEl = useRef<any>(null);
   const [arcsData, setArcsData] = useState([]);
   const [countries, setCountries] = useState({ features: [] });
 
