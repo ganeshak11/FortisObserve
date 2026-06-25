@@ -14,7 +14,7 @@ export async function GET(req: Request) {
         const excludeCredentials = (devices || []).map(dev => ({
             id: dev.credential_id,
             type: 'public-key' as const,
-            transports: ['internal', 'usb', 'ble', 'nfc'] as AuthenticatorTransportFuture[],
+            transports: ['internal', 'usb', 'ble', 'nfc'] as any,
         }));
 
         const options = await generateRegistrationOptions({
