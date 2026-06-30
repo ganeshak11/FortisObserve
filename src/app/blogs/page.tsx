@@ -8,19 +8,35 @@ export default async function BlogsPage() {
     // Fetch all blog events
     const { data: blogEvents } = await supabaseAdmin
         .from('events')
-        .select('path, is_bot')
+        .select('path, is_bot, duration_ms, scroll_depth_pct')
         .like('path', '/blog/%');
 
-    const counts: Record<string, { total: number, bots: number }> = {};
+    const counts: Record<string, { total: number, bots: number, totalDuration: number, humanCount: number, totalScroll: number }> = {};
     
     blogEvents?.forEach(e => {
-        if (!counts[e.path]) counts[e.path] = { total: 0, bots: 0 };
+        if (!counts[e.path]) counts[e.path] = { total: 0, bots: 0, totalDuration: 0, humanCount: 0, totalScroll: 0 };
         counts[e.path].total += 1;
-        if (e.is_bot) counts[e.path].bots += 1;
+        
+        if (e.is_bot) {
+            counts[e.path].bots += 1;
+        } else {
+            counts[e.path].humanCount += 1;
+            counts[e.path].totalDuration += (e.duration_ms || 0);
+            counts[e.path].totalScroll += (e.scroll_depth_pct || 0);
+        }
     });
 
     const leaderboard = Object.entries(counts)
-        .map(([path, stats]) => ({ path, ...stats }))
+        .map(([path, stats]) => {
+            const avgDurationMs = stats.humanCount > 0 ? stats.totalDuration / stats.humanCount : 0;
+            const avgScroll = stats.humanCount > 0 ? Math.round(stats.totalScroll / stats.humanCount) : 0;
+            
+            const minutes = Math.floor(avgDurationMs / 60000);
+            const seconds = Math.floor((avgDurationMs % 60000) / 1000);
+            const formattedDuration = `${minutes}m ${seconds}s`;
+
+            return { path, avgScroll, formattedDuration, ...stats };
+        })
         .sort((a, b) => b.total - a.total);
 
     return (
@@ -40,6 +56,8 @@ export default async function BlogsPage() {
                             <th className="px-6 py-4 font-bold tracking-widest">Article Path</th>
                             <th className="px-6 py-4 font-bold tracking-widest">Total Views</th>
                             <th className="px-6 py-4 font-bold tracking-widest">Human vs Bot</th>
+                            <th className="px-6 py-4 font-bold tracking-widest">Read Time</th>
+                            <th className="px-6 py-4 font-bold tracking-widest">Scroll Depth</th>
                             <th className="px-6 py-4 font-bold tracking-widest text-right">Action</th>
                         </tr>
                     </thead>
@@ -63,6 +81,12 @@ export default async function BlogsPage() {
                                             <span className="text-slate-500 text-[10px]">{humanPercent}% Human</span>
                                         </div>
                                     </td>
+                                    <td className="px-6 py-4 font-mono text-emerald-400">
+                                        {item.formattedDuration}
+                                    </td>
+                                    <td className="px-6 py-4 font-mono text-cyan-400">
+                                        {item.avgScroll}%
+                                    </td>
                                     <td className="px-6 py-4 text-right">
                                         <Link href={`https://ganeshangadi.online${item.path}`} target="_blank" className="inline-flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors">
                                             <Eye className="w-4 h-4" />
@@ -74,7 +98,7 @@ export default async function BlogsPage() {
                         })}
                         {leaderboard.length === 0 && (
                             <tr>
-                                <td colSpan={4} className="px-6 py-12 text-center text-slate-500 italic">No blog traffic recorded yet.</td>
+                                <td colSpan={6} className="px-6 py-12 text-center text-slate-500 italic">No blog traffic recorded yet.</td>
                             </tr>
                         )}
                     </tbody>

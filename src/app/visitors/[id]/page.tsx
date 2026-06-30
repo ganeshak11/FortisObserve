@@ -114,6 +114,15 @@ export default async function VisitorTimeline({ params }: { params: { id: string
                                         {ev.latency_ms && (
                                             <div><span className="text-slate-600">LATENCY:</span> {ev.latency_ms}ms</div>
                                         )}
+                                        {ev.backend_latency_ms && (
+                                            <div><span className="text-slate-600">BACKEND:</span> {ev.backend_latency_ms}ms</div>
+                                        )}
+                                        {ev.scroll_depth_pct > 0 && (
+                                            <div><span className="text-slate-600">SCROLL:</span> {ev.scroll_depth_pct}%</div>
+                                        )}
+                                        {ev.duration_ms > 0 && (
+                                            <div><span className="text-slate-600">DURATION:</span> {Math.floor(ev.duration_ms / 60000)}m {Math.floor((ev.duration_ms % 60000) / 1000)}s</div>
+                                        )}
                                         {ev.is_bot && (
                                             <div className="text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded">SUSPECTED BOT</div>
                                         )}
