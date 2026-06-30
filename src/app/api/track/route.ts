@@ -13,6 +13,7 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: NextRequest) {
+    const startTime = performance.now();
     try {
         const body = await req.json();
         const { visitorId, path, referer, userAgent, latencyMs } = body;
@@ -92,6 +93,8 @@ export async function POST(req: NextRequest) {
 
         const finalIsBot = isBot || isDataCenter;
 
+        const backendLatency = Math.round(performance.now() - startTime);
+
         // Call our Supabase RPC to ingest the telemetry
         const { error } = await supabaseAdmin.rpc("ingest_telemetry", {
             p_visitor_uuid: visitorId,
@@ -107,7 +110,8 @@ export async function POST(req: NextRequest) {
             p_path: path,
             p_referer: referer || "",
             p_is_bot: finalIsBot,
-            p_latency_ms: latencyMs || null
+            p_latency_ms: latencyMs || null,
+            p_backend_latency_ms: backendLatency
         });
 
         if (error) {
