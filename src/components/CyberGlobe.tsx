@@ -19,6 +19,27 @@ const COUNTRY_COORDS: Record<string, [number, number]> = {
   "NL": [52.1326, 5.2913],
   "IE": [53.1424, -7.6921],
   "TZ": [-6.3690, 34.8888],
+  "PK": [30.3753, 69.3451],
+  "IR": [32.4279, 53.6880],
+  "ID": [-0.7893, 113.9213],
+  "BE": [50.5039, 4.4699],
+  "MX": [23.6345, -102.5528],
+  "CM": [7.3697, 12.3547],
+  "AT": [47.5162, 14.5501],
+  "KE": [-0.0236, 37.9062],
+  "ZA": [-30.5595, 22.9375],
+  "NG": [9.0820, 8.6753],
+  "EG": [26.8206, 30.8025],
+  "TR": [38.9637, 35.2433],
+  "SA": [23.8859, 45.0792],
+  "IT": [41.8719, 12.5674],
+  "ES": [40.4637, -3.7492],
+  "KR": [35.9078, 127.7669],
+  "MY": [4.2105, 101.9758],
+  "PH": [12.8797, 121.7740],
+  "TH": [15.8700, 100.9925],
+  "VN": [14.0583, 108.2772],
+  "PL": [51.9194, 19.1451],
   "Unknown": [0, 0]
 };
 
@@ -92,11 +113,18 @@ export default function CyberGlobe({ activeSessions = [] }: { activeSessions?: a
                 globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
                 backgroundColor="rgba(0,0,0,0)"
                 
-                // Country Borders
+                // Country Hex Grid
                 hexPolygonsData={countries.features}
                 hexPolygonResolution={3}
                 hexPolygonMargin={0.7}
                 hexPolygonColor={() => '#0f172a'}
+                
+                // Neon Country Borders
+                polygonsData={countries.features}
+                polygonAltitude={0.01}
+                polygonCapColor={() => 'rgba(0,0,0,0)'}
+                polygonSideColor={() => 'rgba(0,0,0,0)'}
+                polygonStrokeColor={() => '#06b6d4'} // Neon cyan
                 
                 // Connection Arcs
                 arcsData={arcsData}

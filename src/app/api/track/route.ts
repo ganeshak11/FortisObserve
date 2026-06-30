@@ -41,8 +41,8 @@ export async function POST(req: NextRequest) {
 
         if (uaLower.includes("windows")) os = "Windows";
         else if (uaLower.includes("mac os")) os = "macOS";
-        else if (uaLower.includes("linux")) os = "Linux";
         else if (uaLower.includes("android")) { os = "Android"; device = "Mobile"; }
+        else if (uaLower.includes("linux")) os = "Linux";
         else if (uaLower.includes("iphone") || uaLower.includes("ipad")) { os = "iOS"; device = "Mobile"; }
 
         if (uaLower.includes("chrome") && !uaLower.includes("edg")) browser = "Chrome";

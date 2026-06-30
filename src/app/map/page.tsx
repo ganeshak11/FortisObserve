@@ -1,7 +1,12 @@
 import { GlobeWrapper } from "@/components/GlobeWrapper";
 import { Globe2 } from "lucide-react";
+import { supabaseAdmin } from "@/lib/supabase";
 
-export default function MapPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function MapPage() {
+    const { data: globeSessions } = await supabaseAdmin.from('sessions').select('country, city, ip_address').limit(500);
+
     return (
         <div className="p-6 space-y-6 h-full flex flex-col">
             <header>
@@ -12,7 +17,7 @@ export default function MapPage() {
                 <p className="text-slate-400 mt-2 text-sm">3D Geographic visualization of traffic sources and endpoints.</p>
             </header>
             <div className="glass-panel flex-1 flex items-center justify-center relative overflow-hidden">
-                <GlobeWrapper />
+                <GlobeWrapper activeSessions={globeSessions || []} />
             </div>
         </div>
     );
