@@ -44,8 +44,8 @@ const COUNTRY_COORDS: Record<string, [number, number]> = {
 };
 
 // User's Node IP Coordinates (Roughly India based on IP)
-const MY_LAT = 20.5937;
-const MY_LNG = 78.9629;
+const MY_LAT = 12.366605;
+const MY_LNG = 76.687614;
 
 export default function CyberGlobe({ activeSessions = [] }: { activeSessions?: any[] }) {
   const globeEl = useRef<any>(null);
@@ -62,22 +62,25 @@ export default function CyberGlobe({ activeSessions = [] }: { activeSessions?: a
 
     // 2. Generate arcs from User Node to all Session IPs
     const arcs = activeSessions.map(session => {
-        const country = session.country || "Unknown";
-        if (country === "Unknown" || !COUNTRY_COORDS[country] || COUNTRY_COORDS[country][0] === 0) {
-            return null;
+        let lat = session.latitude;
+        let lng = session.longitude;
+
+        if (lat == null || lng == null) {
+            const country = session.country || "Unknown";
+            if (country === "Unknown" || !COUNTRY_COORDS[country] || COUNTRY_COORDS[country][0] === 0) {
+                return null;
+            }
+            const coords = COUNTRY_COORDS[country];
+            // Add slight random jitter to coordinates so arcs don't perfectly overlap if they are from the same country
+            lat = coords[0] + (Math.random() - 0.5) * 4;
+            lng = coords[1] + (Math.random() - 0.5) * 4;
         }
-        
-        const coords = COUNTRY_COORDS[country];
-        
-        // Add slight random jitter to coordinates so arcs don't perfectly overlap if they are from the same country
-        const jitterLat = coords[0] + (Math.random() - 0.5) * 4;
-        const jitterLng = coords[1] + (Math.random() - 0.5) * 4;
 
         return {
             startLat: MY_LAT,
             startLng: MY_LNG,
-            endLat: jitterLat,
-            endLng: jitterLng,
+            endLat: lat,
+            endLng: lng,
             color: ['#22d3ee', '#10b981', '#a855f7'][Math.floor(Math.random() * 3)],
             ip: session.ip_address
         };

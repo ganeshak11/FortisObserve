@@ -23,7 +23,7 @@ export default async function CommandCenter() {
       .slice(0, 4);
 
   // Fetch active countries/cities to draw arcs on the globe
-  const { data: globeSessions } = await supabaseAdmin.from('sessions').select('country, city, ip_address').limit(100);
+  const { data: globeSessions } = await supabaseAdmin.from('sessions').select('country, city, ip_address, latitude, longitude').limit(100);
 
   return (
     <div className="p-6 space-y-6 h-full flex flex-col">

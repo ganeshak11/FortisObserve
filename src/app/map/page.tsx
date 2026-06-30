@@ -5,7 +5,7 @@ import { supabaseAdmin } from "@/lib/supabase";
 export const dynamic = 'force-dynamic';
 
 export default async function MapPage() {
-    const { data: globeSessions } = await supabaseAdmin.from('sessions').select('country, city, ip_address').limit(500);
+    const { data: globeSessions } = await supabaseAdmin.from('sessions').select('country, city, ip_address, latitude, longitude').limit(500);
 
     return (
         <div className="p-6 space-y-6 h-full flex flex-col">

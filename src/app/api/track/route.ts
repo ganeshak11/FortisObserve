@@ -29,6 +29,8 @@ export async function POST(req: NextRequest) {
         // Extract Vercel Geo headers
         let country = req.headers.get("x-vercel-ip-country") || "Unknown";
         let city = req.headers.get("x-vercel-ip-city") || "Unknown";
+        let latitude = parseFloat(req.headers.get("x-vercel-ip-latitude") || "0");
+        let longitude = parseFloat(req.headers.get("x-vercel-ip-longitude") || "0");
 
         // Simple Bot Detection based on User-Agent
         const uaLower = (userAgent || req.headers.get("user-agent") || "").toLowerCase();
@@ -61,11 +63,34 @@ export async function POST(req: NextRequest) {
                     // If Vercel didn't give us city/country, we can fallback to IPInfo here
                     if (country === "Unknown" && ipData.country) country = ipData.country;
                     if (city === "Unknown" && ipData.city) city = ipData.city;
+                    if (latitude === 0 && ipData.loc) {
+                        const [lat, lng] = ipData.loc.split(",");
+                        latitude = parseFloat(lat);
+                        longitude = parseFloat(lng);
+                    }
                 }
             } catch (err) {
                 console.error("IPInfo fetch failed:", err);
             }
         }
+        
+        // Data Center IP Checking
+        const ispLower = isp.toLowerCase();
+        const isDataCenter = 
+            ispLower.includes("amazon") || 
+            ispLower.includes("google") || 
+            ispLower.includes("microsoft") || 
+            ispLower.includes("azure") || 
+            ispLower.includes("digitalocean") || 
+            ispLower.includes("ovh") || 
+            ispLower.includes("hetzner") || 
+            ispLower.includes("linode") || 
+            ispLower.includes("alibaba") || 
+            ispLower.includes("tencent") || 
+            ispLower.includes("choopa") || 
+            ispLower.includes("contabo");
+
+        const finalIsBot = isBot || isDataCenter;
 
         // Call our Supabase RPC to ingest the telemetry
         const { error } = await supabaseAdmin.rpc("ingest_telemetry", {
@@ -77,9 +102,11 @@ export async function POST(req: NextRequest) {
             p_browser: browser,
             p_os: os,
             p_device: device,
+            p_latitude: latitude === 0 ? null : latitude,
+            p_longitude: longitude === 0 ? null : longitude,
             p_path: path,
             p_referer: referer || "",
-            p_is_bot: isBot,
+            p_is_bot: finalIsBot,
             p_latency_ms: latencyMs || null
         });
 

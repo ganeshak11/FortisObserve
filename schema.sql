@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS public.sessions (
     browser TEXT,
     os TEXT,
     device TEXT,
+    latitude DECIMAL(10, 6),
+    longitude DECIMAL(10, 6),
     first_seen TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     last_seen TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     total_visits INTEGER DEFAULT 1 NOT NULL,
@@ -46,6 +48,8 @@ CREATE OR REPLACE FUNCTION public.ingest_telemetry(
     p_browser TEXT,
     p_os TEXT,
     p_device TEXT,
+    p_latitude DECIMAL,
+    p_longitude DECIMAL,
     p_path TEXT,
     p_referer TEXT,
     p_is_bot BOOLEAN,
@@ -60,14 +64,16 @@ BEGIN
 
     IF v_session_id IS NULL THEN
         -- Insert new session
-        INSERT INTO public.sessions (visitor_uuid, ip_address, isp, country, city, browser, os, device)
-        VALUES (p_visitor_uuid, p_ip_address, p_isp, p_country, p_city, p_browser, p_os, p_device)
+        INSERT INTO public.sessions (visitor_uuid, ip_address, isp, country, city, browser, os, device, latitude, longitude)
+        VALUES (p_visitor_uuid, p_ip_address, p_isp, p_country, p_city, p_browser, p_os, p_device, p_latitude, p_longitude)
         RETURNING id INTO v_session_id;
     ELSE
         -- Update existing session
         UPDATE public.sessions
         SET last_seen = timezone('utc'::text, now()),
-            total_visits = total_visits + 1
+            total_visits = total_visits + 1,
+            latitude = COALESCE(p_latitude, latitude),
+            longitude = COALESCE(p_longitude, longitude)
         WHERE id = v_session_id;
     END IF;
 
