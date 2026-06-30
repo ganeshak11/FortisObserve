@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
+import { UAParser } from "ua-parser-js";
 
 // Allow CORS so the portfolio can send requests here from the browser
 const corsHeaders = {
@@ -34,24 +35,25 @@ export async function POST(req: NextRequest) {
         let longitude = parseFloat(req.headers.get("x-vercel-ip-longitude") || "0");
 
         // Simple Bot Detection based on User-Agent
-        const uaLower = (userAgent || req.headers.get("user-agent") || "").toLowerCase();
+        const rawUA = userAgent || req.headers.get("user-agent") || "";
+        const uaLower = rawUA.toLowerCase();
         const isBot = uaLower.includes("bot") || uaLower.includes("crawler") || uaLower.includes("spider");
 
-        // Simple device/os/browser parsing
-        let os = "Unknown";
-        let browser = "Unknown";
-        let device = "Desktop";
+        // Advanced device/os/browser parsing using UAParser
+        const parser = new UAParser(rawUA);
+        const parsedOS = parser.getOS();
+        const parsedBrowser = parser.getBrowser();
+        const parsedDevice = parser.getDevice();
 
-        if (uaLower.includes("windows")) os = "Windows";
-        else if (uaLower.includes("mac os")) os = "macOS";
-        else if (uaLower.includes("android")) { os = "Android"; device = "Mobile"; }
-        else if (uaLower.includes("linux")) os = "Linux";
-        else if (uaLower.includes("iphone") || uaLower.includes("ipad")) { os = "iOS"; device = "Mobile"; }
-
-        if (uaLower.includes("chrome") && !uaLower.includes("edg")) browser = "Chrome";
-        else if (uaLower.includes("firefox")) browser = "Firefox";
-        else if (uaLower.includes("safari") && !uaLower.includes("chrome")) browser = "Safari";
-        else if (uaLower.includes("edg")) browser = "Edge";
+        const os = parsedOS.name || "Unknown";
+        const browser = parsedBrowser.name || "Unknown";
+        let device = "Desktop"; // Default to Desktop if device type is undefined
+        
+        if (parsedDevice.type) {
+            // device.type can be 'console', 'mobile', 'tablet', 'smarttv', 'wearable', 'embedded'
+            // We capitalize the first letter to keep it clean (e.g., 'Mobile', 'Tablet')
+            device = parsedDevice.type.charAt(0).toUpperCase() + parsedDevice.type.slice(1);
+        }
 
         // Fetch ISP from IPInfo (if we have a token and it's not localhost)
         let isp = "Unknown";
