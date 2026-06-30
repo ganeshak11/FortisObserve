@@ -12,9 +12,12 @@
 - **Frontend Engine**: Next.js (App Router + Turbopack)
 - **Styling**: TailwindCSS + Lucide React + Glassmorphism UI
 - **Visualization**: `react-globe.gl` (WebGL Data Visualization)
-- **Database**: Supabase (PostgreSQL)
+- **Database**: Supabase (PostgreSQL + PlpgSQL RPCs)
 - **Authentication**: Multi-factor authentication using TOTP and WebAuthn
-- **Geolocation**: `ipinfo.io` Network Layer Routing
+- **Geolocation**: Vercel Edge Headers & `ipinfo.io` Network Layer Routing
+- **Device Taxonomy**: `ua-parser-js`
+
+> 📘 **For a deep-dive into the ingestion pipeline, data structures, and client-side tracking, see [ARCHITECTURE.md](./ARCHITECTURE.md).**
 
 ---
 
@@ -56,15 +59,18 @@ A dynamic, real-time 3D rendering of the globe utilizing `react-globe.gl`.
 ### 2. Live Intelligence Feed
 A simulated terminal output tracking HTTP requests hitting the primary portfolio.
 - Extracts client IP information from trusted proxy headers (X-Forwarded-For when available).
-- Displays connection statuses, User-Agent identification, and HTTP endpoints accessed in an auto-scrolling terminal window.
+- Displays connection statuses, exact Device/OS/Browser taxonomy, and HTTP endpoints accessed in an auto-scrolling terminal window.
+- Captures UTM parameters (e.g., `?utm_source=`) to bypass privacy-stripping webviews (like LinkedIn/Instagram mobile apps) and accurately track referring domains.
 
 ### 3. Target Dossier (Visitor Analytics)
 A searchable, paginated table of all unique network footprints tracking:
-- Browser and OS profiles
-- First Seen and Last Seen timestamps
-- Total Request Count and Session Duration
-- Integrates ASN details (e.g., Airtel, Jio, AWS, Google Cloud).
-- Flags requests matching known crawler signatures or suspicious traffic patterns.
+- Precise Browser and OS versions (e.g., Chrome 124, iOS 17) and hardware models (Tablet vs Mobile).
+- First Seen and Last Seen timestamps.
+- Total Request Count and precise Session Duration timers.
+- Scroll Depth calculations to measure content engagement.
+- Backend Latency metrics appended to every page view for system health monitoring.
+- Integrates ASN details to silently flag datacenter requests (e.g., AWS, Google Cloud) as bots, keeping human metrics pristine.
+- Flags sessions for "Impossible Travel" anomalies if a user jumps countries in less than 12 hours.
 
 ---
 
