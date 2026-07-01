@@ -81,7 +81,7 @@ export default function CyberGlobe({ activeSessions = [] }: { activeSessions?: a
             startLng: MY_LNG,
             endLat: lat,
             endLng: lng,
-            color: ['#22d3ee', '#10b981', '#a855f7'][Math.floor(Math.random() * 3)],
+            color: ['#00e5ff', '#10b981', '#a855f7'][Math.floor(Math.random() * 3)],
             ip: session.ip_address
         };
     }).filter(arc => arc !== null);
@@ -127,7 +127,7 @@ export default function CyberGlobe({ activeSessions = [] }: { activeSessions?: a
                 polygonAltitude={0.01}
                 polygonCapColor={() => 'rgba(0,0,0,0)'}
                 polygonSideColor={() => 'rgba(0,0,0,0)'}
-                polygonStrokeColor={() => '#06b6d4'} // Neon cyan
+                polygonStrokeColor={() => '#00e5ff'} // Electric Cyan
                 
                 // Connection Arcs
                 arcsData={arcsData}

@@ -12,7 +12,7 @@ export default async function MapPage() {
             <header>
                 <h1 className="text-2xl font-bold tracking-wider text-slate-100 flex items-center gap-3">
                     <Globe2 className="w-6 h-6 text-cyan-400" />
-                    GLOBAL THREAT RADAR
+                    FORTIS RADAR
                 </h1>
                 <p className="text-slate-400 mt-2 text-sm">3D Geographic visualization of traffic sources and endpoints.</p>
             </header>

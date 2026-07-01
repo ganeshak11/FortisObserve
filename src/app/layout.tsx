@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body suppressHydrationWarning className={`${inter.className} bg-slate-950 text-slate-200 flex min-h-screen overflow-hidden`}>
+      <body suppressHydrationWarning className={`${inter.className} bg-black text-slate-200 flex min-h-screen overflow-hidden`}>
         <Sidebar />
         <main className="flex-1 h-screen overflow-y-auto relative">
           {children}

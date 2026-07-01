@@ -26,7 +26,7 @@ export default async function CommandCenter() {
   const { data: globeSessions } = await supabaseAdmin.from('sessions').select('country, city, ip_address, latitude, longitude').limit(100);
 
   return (
-    <div className="p-6 space-y-6 h-full flex flex-col">
+    <div className="p-4 md:p-6 space-y-6 min-h-full flex flex-col pb-24 md:pb-10">
       {/* Header bar */}
       <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-wider text-slate-100 flex items-center gap-3">
@@ -80,7 +80,7 @@ export default async function CommandCenter() {
         <div className="xl:col-span-6 glass-panel flex items-center justify-center relative overflow-hidden min-h-[400px] xl:min-h-0">
             <div className="absolute top-4 left-4 z-10">
                 <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase flex items-center gap-2 bg-slate-950/80 p-2 rounded backdrop-blur-md">
-                <Globe2 className="w-4 h-4" /> Global Threat Radar
+                <Globe2 className="w-4 h-4" /> Fortis Radar
                 </h2>
             </div>
             
@@ -103,7 +103,7 @@ export default async function CommandCenter() {
             </ul>
           </div>
 
-          <div className="glass-panel p-5 flex-1 flex flex-col overflow-hidden">
+          <div className="glass-panel p-5 flex-1 flex flex-col overflow-hidden min-h-[300px] xl:min-h-0">
             <h2 className="text-xs font-bold text-slate-400 tracking-widest uppercase flex items-center gap-2 mb-4 shrink-0">
               <Activity className="w-4 h-4" /> Live Event Feed
             </h2>
