@@ -40,7 +40,7 @@ export default async function BlogsPage() {
         .sort((a, b) => b.total - a.total);
 
     return (
-        <div className="p-6 space-y-6 h-full flex flex-col overflow-y-auto">
+        <div className="p-6 space-y-6 min-h-full flex flex-col pb-10">
             <header>
                 <h1 className="text-2xl font-bold tracking-wider text-slate-100 flex items-center gap-3">
                     <FileText className="w-6 h-6 text-cyan-400" />
