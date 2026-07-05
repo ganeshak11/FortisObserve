@@ -8,7 +8,7 @@ export async function proxy(request: NextRequest) {
     if (
         pathname.startsWith('/lockdown') || 
         pathname.startsWith('/api/auth') || 
-        pathname.startsWith('/api/track') || // Allow external telemetry
+        pathname.startsWith('/api/telemetry') || // Allow external telemetry
         pathname.startsWith('/_next') || 
         pathname.startsWith('/favicon.ico')
     ) {

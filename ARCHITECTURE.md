@@ -4,13 +4,13 @@ FortisObserve is a high-performance, decoupled telemetry ingestion and analytics
 
 ## 1. System Topology
 
-FortisObserve operates asynchronously. When a user visits the primary portfolio, the Next.js Edge functions and client-side components fire non-blocking beacons (`fetch` with `keepalive: true`) to the `analytics.ganeshangadi.online/api/track` endpoint. 
+FortisObserve operates asynchronously. When a user visits the primary portfolio, the Next.js Edge functions and client-side components fire non-blocking beacons (`fetch` with `keepalive: true`) to the `analytics.ganeshangadi.online/api/telemetry` endpoint. 
 
 This ensures that the main portfolio's Time to Interactive (TTI) and Largest Contentful Paint (LCP) are completely unaffected by analytics processing.
 
 ## 2. Ingestion Pipeline
 
-### Edge Processing (`/api/track`)
+### Edge Processing (`/api/telemetry`)
 The ingress point intercepts payloads and immediately processes:
 - **IP Extraction:** Reads `x-forwarded-for` and `x-real-ip`.
 - **Geolocation:** Reads Vercel's edge network headers (`x-vercel-ip-country`, `x-vercel-ip-city`, `x-vercel-ip-latitude`, `x-vercel-ip-longitude`) to pinpoint the exact coordinates of the request. Falls back to `ipinfo.io` if Vercel headers are missing.

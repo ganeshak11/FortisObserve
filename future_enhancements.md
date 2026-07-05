@@ -8,7 +8,7 @@ This document tracks long-term architectural upgrades and feature proposals for 
 Currently, device and OS classification relies on a lightweight, manual string-matching heuristic (e.g., checking if the User-Agent contains "Android" or "Windows"). While extremely fast (sub 10ms execution time), it lacks granularity and requires manual regex updates if browser vendors change their User-Agent formatting conventions.
 
 **Solution:**
-Integrate an industry-standard parsing library such as `ua-parser-js` or `browser` into the `/api/track` route.
+Integrate an industry-standard parsing library such as `ua-parser-js` or `browser` into the `/api/telemetry` route.
 
 **Implementation Details:**
 - **Dependency:** `npm install ua-parser-js`
